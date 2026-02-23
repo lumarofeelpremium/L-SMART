@@ -2,25 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>L-SMART BY LUMARO</title>
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.2);
+            /* Wahi purane vibrant colors */
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.3);
             --neon-accent: #00f2fe;
-            --text-white: #ffffff;
         }
 
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s ease; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             background: linear-gradient(45deg, #4a00e0, #8e2de2, #ff0080);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            margin: 0; min-height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            padding: 10px; color: white;
+            height: 100dvh; 
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            position: fixed;
         }
 
         @keyframes gradientBG {
@@ -30,85 +38,74 @@
         }
 
         .app-container {
-            background: var(--glass-bg);
+            background: rgba(0, 0, 0, 0.2); /* Thoda dark background taaki text chamke */
             backdrop-filter: blur(25px) saturate(180%);
             -webkit-backdrop-filter: blur(25px) saturate(180%);
-            width: 100%; max-width: 390px; height: 820px;
-            border-radius: 45px; padding: 25px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column;
-            position: relative; overflow: hidden;
+            width: 100vw !important;
+            height: 100dvh !important;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .header { margin-bottom: 25px; text-align: left; }
-        .brand-main { font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; text-shadow: 0 0 15px rgba(0,242,254,0.5); }
-        .brand-sub { font-size: 0.7rem; font-weight: 600; opacity: 0.7; letter-spacing: 3px; text-transform: uppercase; margin-top: -3px; }
+        .header { margin-bottom: 20px; padding-top: 10px; }
+        .brand-main { font-weight: 800; font-size: 1.8rem; letter-spacing: 2px; color: #ffffff; text-shadow: 0 0 15px rgba(0,242,254,0.6); }
+        .brand-sub { font-size: 0.75rem; font-weight: 700; opacity: 0.9; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; }
 
         .tabs {
-            display: flex; background: rgba(255,255,255,0.1); border-radius: 20px; 
+            display: flex; background: rgba(255,255,255,0.15); border-radius: 20px; 
             padding: 5px; margin-bottom: 20px; border: 1px solid var(--glass-border);
         }
         .tab-btn {
             flex: 1; border: none; background: none; padding: 12px; border-radius: 15px;
-            font-weight: 700; cursor: pointer; color: rgba(255,255,255,0.5); font-size: 0.85rem;
+            font-weight: 800; cursor: pointer; color: rgba(255,255,255,0.6); font-size: 0.9rem;
         }
-        .tab-btn.active { background: rgba(255,255,255,0.2); color: white; }
+        .tab-btn.active { background: #ffffff; color: #4a00e0; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 
-        .tab-content { display: none; height: 100%; overflow-y: auto; padding-bottom: 20px; }
-        .tab-content.active { display: block; }
+        .tab-content { display: none; flex-direction: column; height: 100%; overflow: hidden; }
+        .tab-content.active { display: flex; }
+
+        .scroll-area { flex-grow: 1; overflow-y: auto; padding-bottom: 20px; }
 
         .input-card {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
             border-radius: 20px; padding: 15px; margin-bottom: 15px;
             border: 1px solid var(--glass-border);
         }
-        .card-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .card-label { font-size: 0.75rem; font-weight: 800; color: #ffffff; text-transform: uppercase; margin-bottom: 5px; display: block; }
         .input-box {
-            width: 100%; border: none; font-size: 1.8rem; font-weight: 700;
-            color: white; text-align: right; outline: none; background: transparent;
+            width: 100%; border: none; font-size: 1.8rem; font-weight: 800;
+            color: #ffffff; text-align: right; outline: none; background: transparent;
         }
 
         .result-glass {
-            background: linear-gradient(135deg, rgba(0,242,254,0.2), rgba(74,0,224,0.2));
-            border: 1px solid rgba(0,242,254,0.4);
+            background: linear-gradient(135deg, rgba(0,242,254,0.3), rgba(74,0,224,0.3));
+            border: 2px solid var(--neon-accent);
         }
         .result-glass .card-label { color: var(--neon-accent); }
         .result-glass .input-box { color: var(--neon-accent); font-size: 2.2rem; }
 
         .glass-btn {
-            width: 100%; padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1); color: white; font-weight: 800; cursor: pointer;
-            margin-bottom: 15px; font-size: 0.8rem;
+            width: 100%; padding: 15px; border-radius: 20px; border: 1px solid #ffffff;
+            background: rgba(255,255,255,0.1); color: #ffffff; font-weight: 800; margin-bottom: 15px; text-transform: uppercase;
         }
 
-        .history-section { margin-top: 15px; }
-        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .history-title { font-size: 0.7rem; font-weight: 800; opacity: 0.5; letter-spacing: 1px; text-transform: uppercase; }
-        .clear-history { font-size: 0.65rem; color: #ff4757; cursor: pointer; border: none; background: none; font-weight: bold; }
+        .history-section { margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; }
+        .history-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .history-title { font-size: 0.8rem; font-weight: 800; color: #ffffff; text-transform: uppercase; }
+        .clear-history { font-size: 0.8rem; color: #ff4757; background: none; border: none; font-weight: 900; }
         .history-list { max-height: 200px; overflow-y: auto; }
         .history-item {
-            background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 10px; margin-bottom: 8px;
-            font-size: 0.8rem; display: flex; justify-content: space-between; border-left: 3px solid var(--neon-accent);
-            animation: slideIn 0.3s ease;
+            background: rgba(0, 0, 0, 0.2); border-radius: 12px; padding: 12px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; border-left: 5px solid var(--neon-accent); color: #ffffff; font-weight: 600;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* --- UPDATED CALC DISPLAY --- */
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-bottom: 20px; }
         .c-btn {
-            height: 60px; border-radius: 18px; border: 1px solid var(--glass-border);
-            background: rgba(255,255,255,0.1); color: white; font-size: 1.3rem; font-weight: 700;
+            height: 65px; border-radius: 20px; border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.15); color: #ffffff; font-size: 1.5rem; font-weight: 800;
         }
-        .eq-btn { background: var(--neon-accent); color: #000; border: none; }
-        
-        /* Fixed display wrapping for long equations */
-        .calc-display-card { 
-            margin-bottom: 25px; height: 110px; 
-            display: flex; flex-direction: column; justify-content: center;
-            align-items: flex-end; overflow: hidden;
-            word-wrap: break-word; overflow-wrap: break-word;
-        }
+        .eq-btn { background: var(--neon-accent); color: #000; border: none; box-shadow: 0 0 20px rgba(0,242,254,0.4); }
     </style>
 </head>
 <body>
@@ -127,53 +124,57 @@
 
         <div id="market" class="tab-content active">
             <button class="glass-btn" onclick="resetMarket()">Reset</button>
-            <div class="input-card">
-                <span class="card-label">Rate (Per KG)</span>
-                <input type="number" id="mRate" class="input-box" placeholder="0" oninput="doMarketCalc('rate')">
-            </div>
-            <div class="input-card">
-                <span class="card-label">Weight (Grams)</span>
-                <input type="number" id="mQty" class="input-box" placeholder="0" oninput="doMarketCalc('qty')">
-            </div>
-            <div class="input-card result-glass">
-                <span class="card-label">Total Price</span>
-                <input type="number" id="mPrice" class="input-box" placeholder="0" oninput="doMarketCalc('price')">
-            </div>
-            <div class="history-section">
-                <div class="history-header">
-                    <span class="history-title">History</span>
-                    <button class="clear-history" onclick="clearHist('mHist')">Clear All</button>
+            <div class="scroll-area">
+                <div class="input-card">
+                    <span class="card-label">Rate (Per KG)</span>
+                    <input type="number" id="mRate" class="input-box" placeholder="0" oninput="doMarketCalc('rate')">
                 </div>
-                <div class="history-list" id="mHist"></div>
+                <div class="input-card">
+                    <span class="card-label">Weight (Grams)</span>
+                    <input type="number" id="mQty" class="input-box" placeholder="0" oninput="doMarketCalc('qty')">
+                </div>
+                <div class="input-card result-glass">
+                    <span class="card-label">Total Price</span>
+                    <input type="number" id="mPrice" class="input-box" placeholder="0" oninput="doMarketCalc('price')">
+                </div>
+                <div class="history-section">
+                    <div class="history-header">
+                        <span class="history-title">History</span>
+                        <button class="clear-history" onclick="clearHist('mHist')">Clear All</button>
+                    </div>
+                    <div class="history-list" id="mHist"></div>
+                </div>
             </div>
         </div>
 
         <div id="discount" class="tab-content">
             <button class="glass-btn" onclick="resetDiscount()">Reset</button>
-            <div class="input-card">
-                <span class="card-label">Original Price</span>
-                <input type="number" id="dPrice" class="input-box" placeholder="0" oninput="doDisc('price')">
-            </div>
-            <div class="input-card">
-                <span class="card-label">Discount %</span>
-                <input type="number" id="dPerc" class="input-box" placeholder="0" oninput="doDisc('perc')">
-            </div>
-            <div class="input-card result-glass" style="border-color: #fff;">
-                <span class="card-label" style="color:#fff;">Final Price</span>
-                <input type="number" id="dFinal" class="input-box" style="color:#fff;" placeholder="0" oninput="doDisc('final')">
-                <div id="dSave" style="font-size: 0.7rem; text-align: center; margin-top: 5px; font-weight: bold;">Saved: ₹0</div>
-            </div>
-            <div class="history-section">
-                <div class="history-header">
-                    <span class="history-title">History</span>
-                    <button class="clear-history" onclick="clearHist('dHist')">Clear All</button>
+            <div class="scroll-area">
+                <div class="input-card">
+                    <span class="card-label">Original Price</span>
+                    <input type="number" id="dPrice" class="input-box" placeholder="0" oninput="doDisc('price')">
                 </div>
-                <div class="history-list" id="dHist"></div>
+                <div class="input-card">
+                    <span class="card-label">Discount %</span>
+                    <input type="number" id="dPerc" class="input-box" placeholder="0" oninput="doDisc('perc')">
+                </div>
+                <div class="input-card result-glass" style="border-color: #ffffff;">
+                    <span class="card-label" style="color:#ffffff;">Final Price</span>
+                    <input type="number" id="dFinal" class="input-box" style="color:#ffffff;" placeholder="0" oninput="doDisc('final')">
+                    <div id="dSave" style="font-size: 0.9rem; text-align: center; margin-top: 5px; font-weight: 900; color:#ffffff;">Saved: ₹0</div>
+                </div>
+                <div class="history-section">
+                    <div class="history-header">
+                        <span class="history-title">History</span>
+                        <button class="clear-history" onclick="clearHist('dHist')">Clear All</button>
+                    </div>
+                    <div class="history-list" id="dHist"></div>
+                </div>
             </div>
         </div>
 
         <div id="calc" class="tab-content">
-            <div class="input-card calc-display-card">
+            <div class="input-card" style="height: 100px; display: flex; align-items: center; margin-bottom: 20px;">
                 <input type="text" id="calcDisplay" class="input-box" style="font-size: 2.8rem; width: 100%;" value="0" readonly>
             </div>
             <div class="calc-grid">
@@ -209,7 +210,7 @@
             for (i = 0; i < content.length; i++) content[i].style.display = "none";
             links = document.getElementsByClassName("tab-btn");
             for (i = 0; i < links.length; i++) links[i].classList.remove("active");
-            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).style.display = "flex";
             evt.currentTarget.classList.add("active");
         }
 
@@ -282,46 +283,28 @@
         function resetMarket() { document.getElementById('mRate').value = ""; document.getElementById('mQty').value = ""; document.getElementById('mPrice').value = ""; }
         function resetDiscount() { document.getElementById('dPrice').value = ""; document.getElementById('dPerc').value = ""; document.getElementById('dFinal').value = ""; document.getElementById('dSave').innerText = "Saved: ₹0"; }
 
-        // --- ENHANCED CALC LOGIC ---
         let cDisp = document.getElementById('calcDisplay');
-        
         function adjustFont() {
             let len = cDisp.value.length;
-            if(len > 18) cDisp.style.fontSize = "1rem";
-            else if(len > 14) cDisp.style.fontSize = "1.4rem";
-            else if(len > 10) cDisp.style.fontSize = "1.9rem";
+            if(len > 18) cDisp.style.fontSize = "1.2rem";
+            else if(len > 14) cDisp.style.fontSize = "1.6rem";
+            else if(len > 10) cDisp.style.fontSize = "2.1rem";
             else cDisp.style.fontSize = "2.8rem";
         }
-
         function cPush(v) { 
-            // Ab ye poori equation (current calculation) ko show karega
             if(cDisp.value === "0" && v !== '.') cDisp.value = v; 
             else cDisp.value += v; 
             adjustFont();
         }
-
         function cClear() { cDisp.value = "0"; adjustFont(); }
-        function cDel() { 
-            cDisp.value = cDisp.value.slice(0, -1) || "0"; 
-            adjustFont(); 
-        }
-
+        function cDel() { cDisp.value = cDisp.value.slice(0, -1) || "0"; adjustFont(); }
         function cRes() { 
             try { 
-                // Replacing symbols for calculation
-                let equation = cDisp.value.replace(/×/g, '*').replace(/÷/g, '/');
-                let res = eval(equation); 
-                
-                // Result handling
+                let eq = cDisp.value.replace(/×/g, '*').replace(/÷/g, '/');
+                let res = eval(eq); 
                 if(Math.abs(res) > 1e12) cDisp.value = res.toExponential(4);
-                else {
-                    // Limiting decimals to keep display clean
-                    let stringRes = Number(res.toFixed(8)).toString();
-                    cDisp.value = stringRes;
-                }
-            } catch { 
-                cDisp.value = "Error"; 
-            } 
+                else cDisp.value = Number(res.toFixed(8)).toString();
+            } catch { cDisp.value = "Error"; } 
             adjustFont();
         }
     </script>
