@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>L-SMART BY LUMARO</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --neon-accent: #00f2fe;
+        }
+
+        /* --- MOBILE LOCK SETUP --- */
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(45deg, #4a00e0, #8e2de2, #ff0080);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Side screen bilkul nahi aayegi */
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Full Screen Container */
+        .app-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            width: 100%; /* Mobile screen ki poori width */
+            height: 100%; /* Mobile screen ki poori height */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header { margin-bottom: 20px; padding-top: 10px; }
+        .brand-main { font-weight: 800; font-size: 1.8rem; letter-spacing: 2px; text-shadow: 0 0 15px rgba(0,242,254,0.5); color: white; }
+        .brand-sub { font-size: 0.75rem; font-weight: 600; opacity: 0.7; letter-spacing: 3px; text-transform: uppercase; color: white; }
+
+        .tabs {
+            display: flex; background: rgba(255,255,255,0.1); border-radius: 20px; 
+            padding: 5px; margin-bottom: 20px; border: 1px solid var(--glass-border);
+        }
+        .tab-btn {
+            flex: 1; border: none; background: none; padding: 12px; border-radius: 15px;
+            font-weight: 700; cursor: pointer; color: rgba(255,255,255,0.5); font-size: 0.9rem;
+        }
+        .tab-btn.active { background: rgba(255,255,255,0.2); color: white; }
+
+        .tab-content { display: none; flex-grow: 1; overflow-y: auto; padding-bottom: 20px; }
+        .tab-content.active { display: flex; flex-direction: column; }
+
+        .input-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px; padding: 15px; margin-bottom: 15px;
+            border: 1px solid var(--glass-border);
+        }
+        .card-label { font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .input-box {
+            width: 100%; border: none; font-size: 1.8rem; font-weight: 700;
+            color: white; text-align: right; outline: none; background: transparent;
+        }
+
+        .result-glass {
+            background: linear-gradient(135deg, rgba(0,242,254,0.2), rgba(74,0,224,0.2));
+            border: 1px solid rgba(0,242,254,0.4);
+        }
+        .result-glass .card-label { color: var(--neon-accent); }
+        .result-glass .input-box { color: var(--neon-accent); font-size: 2.2rem; }
+
+        .glass-btn {
+            width: 100%; padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1); color: white; font-weight: 800; margin-bottom: 15px;
+        }
+
+        /* History */
+        .history-section { margin-top: 15px; flex-grow: 1; }
+        .history-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .history-title { font-size: 0.8rem; font-weight: 800; opacity: 0.5; color: white; }
+        .clear-history { font-size: 0.75rem; color: #ff4757; background: none; border: none; font-weight: bold; }
+        .history-list { max-height: 200px; overflow-y: auto; }
+        .history-item {
+            background: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; border-left: 4px solid var(--neon-accent); color: white;
+        }
+
+        /* Calc Grid */
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: auto; }
+        .c-btn {
+            height: 65px; border-radius: 18px; border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.1); color: white; font-size: 1.4rem; font-weight: 700;
+        }
+        .eq-btn { background: var(--neon-accent); color: #000; border: none; }
+        .calc-display-card { height: 100px; display: flex; align-items: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <div class="brand-main">L-SMART</div>
+            <div class="brand-sub">BY LUMARO</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'market')">Market</button>
+            <button class="tab-btn" onclick="openTab(event, 'discount')">Discount</button>
+            <button class="tab-btn" onclick="openTab(event, 'calc')">Calc</button>
+        </div>
+
+        <div id="market" class="tab-content active">
+            <button class="glass-btn" onclick="resetMarket()">Reset</button>
+            <div class="input-card">
+                <span class="card-label">Rate (Per KG)</span>
+                <input type="number" id="mRate" class="input-box" placeholder="0" oninput="doMarketCalc('rate')">
+            </div>
+            <div class="input-card">
+                <span class="card-label">Weight (Grams)</span>
+                <input type="number" id="mQty" class="input-box" placeholder="0" oninput="doMarketCalc('qty')">
+            </div>
+            <div class="input-card result-glass">
+                <span class="card-label">Total Price</span>
+                <input type="number" id="mPrice" class="input-box" placeholder="0" oninput="doMarketCalc('price')">
+            </div>
+            <div class="history-section">
+                <div class="history-header">
+                    <span class="history-title">History</span>
+                    <button class="clear-history" onclick="clearHist('mHist')">Clear All</button>
+                </div>
+                <div class="history-list" id="mHist"></div>
+            </div>
+        </div>
+
+        <div id="discount" class="tab-content">
+            <button class="glass-btn" onclick="resetDiscount()">Reset</button>
+            <div class="input-card">
+                <span class="card-label">Original Price</span>
+                <input type="number" id="dPrice" class="input-box" placeholder="0" oninput="doDisc('price')">
+            </div>
+            <div class="input-card">
+                <span class="card-label">Discount %</span>
+                <input type="number" id="dPerc" class="input-box" placeholder="0" oninput="doDisc('perc')">
+            </div>
+            <div class="input-card result-glass" style="border-color: #fff;">
+                <span class="card-label" style="color:#fff;">Final Price</span>
+                <input type="number" id="dFinal" class="input-box" style="color:#fff;" placeholder="0" oninput="doDisc('final')">
+                <div id="dSave" style="font-size: 0.8rem; text-align: center; margin-top: 5px; font-weight: bold; color:white;">Saved: ₹0</div>
+            </div>
+            <div class="history-section">
+                <div class="history-header">
+                    <span class="history-title">History</span>
+                    <button class="clear-history" onclick="clearHist('dHist')">Clear All</button>
+                </div>
+                <div class="history-list" id="dHist"></div>
+            </div>
+        </div>
+
+        <div id="calc" class="tab-content">
+            <div class="input-card calc-display-card">
+                <input type="text" id="calcDisplay" class="input-box" style="font-size: 2.8rem; width: 100%;" value="0" readonly>
+            </div>
+            <div class="calc-grid">
+                <button class="c-btn" style="color:var(--neon-accent);" onclick="cClear()">AC</button>
+                <button class="c-btn" onclick="cDel()">⌫</button>
+                <button class="c-btn" onclick="cPush('%')">%</button>
+                <button class="c-btn" style="color:var(--neon-accent);" onclick="cPush('/')">÷</button>
+                <button class="c-btn" onclick="cPush('7')">7</button>
+                <button class="c-btn" onclick="cPush('8')">8</button>
+                <button class="c-btn" onclick="cPush('9')">9</button>
+                <button class="c-btn" style="color:var(--neon-accent);" onclick="cPush('*')">×</button>
+                <button class="c-btn" onclick="cPush('4')">4</button>
+                <button class="c-btn" onclick="cPush('5')">5</button>
+                <button class="c-btn" onclick="cPush('6')">6</button>
+                <button class="c-btn" style="color:var(--neon-accent);" onclick="cPush('-')">−</button>
+                <button class="c-btn" onclick="cPush('1')">1</button>
+                <button class="c-btn" onclick="cPush('2')">2</button>
+                <button class="c-btn" onclick="cPush('3')">3</button>
+                <button class="c-btn" style="color:var(--neon-accent);" onclick="cPush('+')">+</button>
+                <button class="c-btn" style="grid-column: span 2;" onclick="cPush('0')">0</button>
+                <button class="c-btn" onclick="cPush('.')">.</button>
+                <button class="c-btn eq-btn" onclick="cRes()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let marketTimer, discountTimer;
+
+        function openTab(evt, tabName) {
+            let i, content, links;
+            content = document.getElementsByClassName("tab-content");
+            for (i = 0; i < content.length; i++) content[i].style.display = "none";
+            links = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < links.length; i++) links[i].classList.remove("active");
+            document.getElementById(tabName).style.display = "flex";
+            evt.currentTarget.classList.add("active");
+        }
+
+        function autoSave(type) {
+            clearTimeout(type === 'market' ? marketTimer : discountTimer);
+            let timer = setTimeout(() => {
+                if(type === 'market') {
+                    let r = document.getElementById('mRate').value, q = document.getElementById('mQty').value, p = document.getElementById('mPrice').value;
+                    if(r > 0 && q > 0 && p > 0) {
+                        let list = document.getElementById('mHist'), newEntry = `${q}g saman ₹${p}`;
+                        if(!list.firstChild || list.firstChild.innerText !== newEntry) {
+                            let item = document.createElement('div');
+                            item.className = 'history-item';
+                            item.innerHTML = `<span>${q}g saman</span> <b>₹${p}</b>`;
+                            list.prepend(item);
+                            if(list.children.length > 10) list.lastChild.remove();
+                        }
+                    }
+                } else {
+                    let p = document.getElementById('dPrice').value, d = document.getElementById('dPerc').value, f = document.getElementById('dFinal').value, s = document.getElementById('dSave').innerText;
+                    if(p > 0 && d > 0 && f > 0) {
+                        let list = document.getElementById('dHist'), newEntry = `Final: ₹${f} ${s}`;
+                        if(!list.firstChild || list.firstChild.innerText !== newEntry) {
+                            let item = document.createElement('div');
+                            item.className = 'history-item';
+                            item.innerHTML = `<span>Final: ₹${f}</span> <b>${s}</b>`;
+                            list.prepend(item);
+                            if(list.children.length > 10) list.lastChild.remove();
+                        }
+                    }
+                }
+            }, 500);
+            if(type === 'market') marketTimer = timer; else discountTimer = timer;
+        }
+
+        function doMarketCalc(source) {
+            let rInput = document.getElementById('mRate'), qInput = document.getElementById('mQty'), pInput = document.getElementById('mPrice');
+            let r = parseFloat(rInput.value) || 0, q = parseFloat(qInput.value) || 0, p = parseFloat(pInput.value) || 0;
+            if (source === 'qty') {
+                if (r > 0) pInput.value = ((r / 1000) * q).toFixed(2);
+                else if (p > 0) rInput.value = ((p / q) * 1000).toFixed(2);
+            } else if (source === 'price') {
+                if (q > 0) rInput.value = ((p / q) * 1000).toFixed(2);
+                else if (r > 0) qInput.value = ((p / r) * 1000).toFixed(0);
+            } else if (source === 'rate') {
+                if (q > 0) pInput.value = ((r / 1000) * q).toFixed(2);
+                else if (p > 0) qInput.value = ((p / r) * 1000).toFixed(0);
+            }
+            autoSave('market');
+        }
+
+        function doDisc(source) {
+            let pInput = document.getElementById('dPrice'), dInput = document.getElementById('dPerc'), fInput = document.getElementById('dFinal'), saveText = document.getElementById('dSave');
+            let p = parseFloat(pInput.value) || 0, d = parseFloat(dInput.value) || 0, f = parseFloat(fInput.value) || 0;
+            if (source === 'price' || source === 'perc') {
+                if (p > 0) {
+                    let final = p - (p * d / 100);
+                    fInput.value = final.toFixed(0);
+                    saveText.innerText = "Saved: ₹" + (p - final).toFixed(0);
+                }
+            } else if (source === 'final' && d < 100) {
+                let original = f / (1 - (d / 100));
+                pInput.value = original.toFixed(0);
+                saveText.innerText = "Saved: ₹" + (original - f).toFixed(0);
+            }
+            autoSave('discount');
+        }
+
+        function clearHist(id) { document.getElementById(id).innerHTML = ""; }
+        function resetMarket() { document.getElementById('mRate').value = ""; document.getElementById('mQty').value = ""; document.getElementById('mPrice').value = ""; }
+        function resetDiscount() { document.getElementById('dPrice').value = ""; document.getElementById('dPerc').value = ""; document.getElementById('dFinal').value = ""; document.getElementById('dSave').innerText = "Saved: ₹0"; }
+
+        let cDisp = document.getElementById('calcDisplay');
+        function adjustFont() {
+            let len = cDisp.value.length;
+            if(len > 18) cDisp.style.fontSize = "1rem";
+            else if(len > 14) cDisp.style.fontSize = "1.4rem";
+            else if(len > 10) cDisp.style.fontSize = "1.9rem";
+            else cDisp.style.fontSize = "2.8rem";
+        }
+        function cPush(v) { 
+            if(cDisp.value === "0" && v !== '.') cDisp.value = v; 
+            else cDisp.value += v; 
+            adjustFont();
+        }
+        function cClear() { cDisp.value = "0"; adjustFont(); }
+        function cDel() { cDisp.value = cDisp.value.slice(0, -1) || "0"; adjustFont(); }
+        function cRes() { 
+            try { 
+                let eq = cDisp.value.replace(/×/g, '*').replace(/÷/g, '/');
+                let res = eval(eq); 
+                if(Math.abs(res) > 1e12) cDisp.value = res.toExponential(4);
+                else cDisp.value = Number(res.toFixed(8)).toString();
+            } catch { cDisp.value = "Error"; } 
+            adjustFont();
+        }
+    </script>
+</body>
+</html>
